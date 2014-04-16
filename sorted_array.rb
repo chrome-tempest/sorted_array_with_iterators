@@ -2,9 +2,9 @@ class SortedArray
   attr_accessor :internal_arr
 
   def initialize(input_arr=[])
-    @internal_arr = []
+    @internal_arr = [] #initialize array with an empty value
     input_arr.each do |element|
-      self.add(element)
+      self.add(element) #self referring to itself
     end
   end
 
@@ -60,6 +60,7 @@ class SortedArray
         first_larger_index(target, mid_ind+1, end_ind)
       end
     end
+
   end
 
   def first_larger_index_loop(target, start_ind=0, end_ind=@internal_arr.size)
@@ -125,24 +126,92 @@ class SortedArray
   end
 
   def each &block
+    i = 0
+    while i < @internal_arr.length
+        yield(@internal_arr[i]) 
+      i+=1
+    end
+    @internal_arr
+  end
+    
+    #puts @internal_arr.each {|x| print x}
+
+
+
     # loop over all elements in @internal_arr
     # yield to each element
 
     # let's keep track of our index
-  end
+  
 
   def each_with_index &block
-  end
+     #should call block with two arguments, item and its index
+     idx = 0
+     self.each do |item| 
+
+      yield item, idx 
+      idx+=1
+
+     end
+   end
+
+     # Invokes the given block once for each element of self.
+
+# Creates a new array containing the values returned by the block.
+
 
   def map &block
+    v = []
+     each do |item| 
+      x = yield item
+      v.push(x)
+    end
+    v
   end
 
+  # Invokes the given block once for each element of self, 
+  # replacing the element with the value returned by the block.
+
+  # See also Enumerable#collect.
+
+  # If no block is given, an Enumerator is returned instead.
+  
   def map! &block
+   idx = 0
+   self.each do |item| 
+      @internal_arr[idx] = yield item
+      idx+=1
+    end
+    @internal_arr 
   end
 
-  def find &block
+  # Passes each entry in enum to block. Returns the first for which block is not false. 
+  # If no object matches, calls ifnone and returns its result when it is specified, 
+  # or returns nil otherwise.
+  # If no block is given, an enumerator is returned instead.
+
+
+  #not sure about this one
+def find(&block)
+    i = 0
+    var = nil
+    each do |element| 
+      if yield(element) == true
+        var = @internal_arr[i] 
+      end
+      i += 1
+    end
+    p var
   end
 
-  def inject acc=nil, &block
+  def inject(acc=nil, &block)
+    @internal_arr.each do |el|
+      if acc.nil?
+        acc = @internal_arr[0]
+      else
+        acc = yield(acc, el)
+      end
+    end
+    acc
   end
 end
